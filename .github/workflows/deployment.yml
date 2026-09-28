@@ -40,5 +40,6 @@ jobs:
           nix run nixpkgs#nixos-rebuild -- \
             switch \
             --flake .#toneriko \
+            --build-host toneriko-deploy \
             --target-host toneriko-deploy \
             --sudo
