@@ -18,14 +18,19 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.TONERIKO_DEPLOYER_KEY }}
       - name: Configure SSH client
+        env:
+          SSH_KNOWN_HOSTS: ${{ vars.SSH_KNOWN_HOSTS }}
         run: |
+          echo $SSH_KNOWN_HOSTS >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
           cat >> ~/.ssh/config <<'EOF'
-          Host toneriko
+          Host toneriko-deploy
             HostName toneriko.top
             User deployer
             ForwardAgent yes
-            IdentitiesOnly yes
+            IdentityAgent $SSH_AUTH_SOCK
           EOF
+          chmod 600 ~/.ssh/config
       - name: Install Nix
         uses: cachix/install-nix-action@v31
         with:
@@ -35,5 +40,5 @@ jobs:
           nix run nixpkgs#nixos-rebuild -- \
             switch \
             --flake .#toneriko \
-            --target-host deployer@toneriko.top \
+            --target-host toneriko-deploy \
             --sudo
