@@ -23,16 +23,30 @@
     # i.e. nixos-24.11
     # Use `nix flake update` to update the flake to the latest revision of the chosen release channel.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    attic = {
+      url = "github:zhaofengli/attic";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
+
   outputs =
     inputs@{
       self,
       nixpkgs,
       disko,
+      attic,
+      agenix,
       ...
     }:
     {
@@ -40,6 +54,8 @@
       nixosConfigurations.toneriko = nixpkgs.lib.nixosSystem {
         modules = [
           disko.nixosModules.disko
+          attic.nixosModules.atticd
+          agenix.nixosModules.default
           ./hosts/toneriko/configuration.nix
         ];
       };
