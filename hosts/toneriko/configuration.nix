@@ -106,6 +106,17 @@
     ]; # Enable ‘sudo’ for the user.
   };
 
+  security.sudo.extraRules = [
+    {
+      users = [ "deployer" ];
+      commands = [
+        {
+          command = "/run/current-system/sw/bin/nixos-rebuild";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
   # programs.firefox.enable = true;
 
   # List packages installed in system profile.
