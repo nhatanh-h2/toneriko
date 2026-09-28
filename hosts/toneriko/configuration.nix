@@ -2,21 +2,26 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+  ];
 
   # Use the GRUB 2 boot loader.
   boot.loader.grub.enable = true;
-  # boot.loader.grub.efiSupport = true;
+  boot.loader.grub.efiSupport = false;
   # boot.loader.grub.efiInstallAsRemovable = true;
   # boot.loader.efi.efiSysMountPoint = "/boot/efi";
   # Define on which hard drive you want to install Grub.
-  boot.loader.grub.device = "/dev/vda"; # or "nodev" for efi only
+  # boot.loader.grub.device = "/dev/vda"; # or "nodev" for efi only
 
   # networking.hostName = "toneriko"; # Define your hostname.
 
@@ -41,9 +46,6 @@
   # Enable the X11 windowing system.
   # services.xserver.enable = true;
 
-
-  
-
   # Configure keymap in X11
   services.xserver.xkb.layout = "us";
   services.xserver.xkb.options = "eurosign:e,caps:escape";
@@ -66,12 +68,20 @@
   users.users.nhatanh = {
     isNormalUser = true;
     openssh.authorizedKeys.keys = [
-     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL0yCNeQudXP6Wj9vtSTWequjS7f5rE0xjW1ZFaPbduW anh.ngo@h2corporation.jp"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL0yCNeQudXP6Wj9vtSTWequjS7f5rE0xjW1ZFaPbduW anh.ngo@h2corporation.jp"
     ];
-    extraGroups = [ "wheel" "networkmanager" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [
+      "wheel"
+      "networkmanager"
+    ]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
       tree
       vim
+    ];
+  };
+  users.users.root = {
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMLEoLUfuDXBpC8q1FzHxF+vMEE3fZKge7Cl9A6N8N3d toneriko deployment"
     ];
   };
 
@@ -100,7 +110,10 @@
     ports = [ 22 ];
     settings = {
       PasswordAuthentication = false;
-      AllowUsers = [ "nhatanh" ]; # Allows all users by default. Can be [ "user1" "user2" ]
+      AllowUsers = [
+        "nhatanh"
+        "root"
+      ]; # Allows all users by default. Can be [ "user1" "user2" ]
       UseDns = true;
       X11Forwarding = false;
       PermitRootLogin = "prohibit-password"; # "yes", "without-password", "prohibit-password", "forced-commands-only", "no"
@@ -108,7 +121,11 @@
   };
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 80 443 22 ];
+  networking.firewall.allowedTCPPorts = [
+    80
+    443
+    22
+  ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
@@ -138,4 +155,3 @@
   system.stateVersion = "26.05"; # Did you read the comment?
 
 }
-

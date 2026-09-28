@@ -5,13 +5,25 @@
     # i.e. nixos-24.11
     # Use `nix flake update` to update the flake to the latest revision of the chosen release channel.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
-    inputs@{ self, nixpkgs, ... }:
+    inputs@{
+      self,
+      nixpkgs,
+      disko,
+      ...
+    }:
     {
       # NOTE: 'nixos' is the default hostname
       nixosConfigurations.toneriko = nixpkgs.lib.nixosSystem {
-        modules = [ ./hosts/toneriko/configuration.nix ];
+        modules = [
+          disko.nixosModules.disko
+          ./hosts/toneriko/configuration.nix
+        ];
       };
     };
 }
