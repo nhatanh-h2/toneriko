@@ -1,4 +1,22 @@
 {
+  nixConfig = {
+    builders-use-substitute = true;
+    show-trace = true;
+
+    experimental-features = [
+      "flakes"
+      "nix-command"
+      "pipe-operators"
+    ];
+
+    extra-substituters = [
+      "https://nix-community.cachix.org/"
+    ];
+    extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
+  };
+
   inputs = {
     # This is pointing to an unstable release.
     # If you prefer a stable release instead, you can change the word unstable to the latest number shown here: https://nixos.org/download
