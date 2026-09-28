@@ -106,17 +106,26 @@
     ]; # Enable ‘sudo’ for the user.
   };
 
-  security.sudo.extraRules = [
-    {
-      users = [ "deployer" ];
-      commands = [
-        {
-          command = "/run/current-system/sw/bin/nixos-rebuild";
-          options = [ "NOPASSWD" ];
-        }
-      ];
-    }
-  ];
+  # security.sudo.extraRules = [
+  #   {
+  #     users = [ "deployer" ];
+  #     commands = [
+  #       {
+  #         command = "/run/current-system/sw/bin/nixos-rebuild";
+  #         options = [ "NOPASSWD" ];
+  #       }
+  #     ];
+  #   }
+  # ];
+  security.pam = {
+    sshAgentAuth = {
+      enable = true;
+      authorizedKeysFiles = lib.mkForce [ "/etc/ssh/authorized_keys.d/%u" ];
+    };
+
+    services.sudo.sshAgentAuth = true;
+  };
+
   # programs.firefox.enable = true;
 
   # List packages installed in system profile.
