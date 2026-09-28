@@ -133,6 +133,7 @@
       PasswordAuthentication = false;
       AllowUsers = [
         "nhatanh"
+        "deployer"
         "root"
       ]; # Allows all users by default. Can be [ "user1" "user2" ]
       UseDns = true;
