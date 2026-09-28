@@ -1,0 +1,38 @@
+name: deployment
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  toneriko-deploy:
+    runs-on: ubuntu-latest
+    environment: toneriko
+    steps:
+      - uses: actions/checkout@v7
+      - name: Start SSH agent
+        uses: webfactory/ssh-agent@v0.10.0
+        with:
+          ssh-private-key: ${{ secrets.TONERIKO_DEPLOYER_KEY }}
+      - name: Configure SSH client
+        run: |
+          cat >> ~/.ssh/config <<'EOF'
+          Host toneriko
+            HostName toneriko.top
+            User deployer
+            ForwardAgent yes
+            IdentitiesOnly yes
+          EOF
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy
+        run: |
+          nixos-rebuild switch \
+            --flake .#toneriko \
+            --target-host deployer@toneriko.top \
+            --sudo
