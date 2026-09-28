@@ -10,6 +10,23 @@
 }:
 
 {
+  nixpkgs.config = {
+    allowUnfree = true;
+  };
+
+  nix.settings = {
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
+    auto-optimise-store = true;
+    trusted-users = [
+      "nhatanh"
+      "deployer"
+      "root"
+    ];
+  };
+
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -79,10 +96,14 @@
       vim
     ];
   };
-  users.users.root = {
+  users.users.deployer = {
+    isNormalUser = true;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMLEoLUfuDXBpC8q1FzHxF+vMEE3fZKge7Cl9A6N8N3d toneriko deployment"
     ];
+    extraGroups = [
+      "wheel"
+    ]; # Enable ‘sudo’ for the user.
   };
 
   # programs.firefox.enable = true;
