@@ -34,7 +34,12 @@ jobs:
       - name: Install Nix
         uses: cachix/install-nix-action@v31
         with:
+          enable_kvm: true
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: |
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+            substituters = https://cache.nixos.org/
+            experimental-features = flakes nix-command
       - name: Deploy
         run: |
           nix run nixpkgs#nixos-rebuild -- \
