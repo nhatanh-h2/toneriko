@@ -73,6 +73,11 @@ in
         sleep 1
       done
 
+      # source the env file as an export for the token subprocess
+      set -a
+      source ${config.age.secrets.attic-env.path}      
+      set +a
+
       token="$(
         ${config.services.atticd.package}/bin/atticadm \
           -f ${config.services.atticd.configFile} \
