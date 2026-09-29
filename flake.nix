@@ -58,6 +58,7 @@
           agenix.nixosModules.default
           ./hosts/toneriko/configuration.nix
         ];
+        specialArgs = { inherit inputs; };
       };
     };
 }
