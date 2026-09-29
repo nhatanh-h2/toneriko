@@ -42,4 +42,7 @@ jobs:
             --flake .#toneriko \
             --build-host toneriko-deploy \
             --target-host toneriko-deploy \
+            --use-substitutes \
+            --no-reexec \
+            --accept-flake-config \
             --sudo
